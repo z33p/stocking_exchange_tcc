@@ -1,0 +1,13 @@
+{
+  "name": "stocking_exchange_tcc",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "Raphael Fellipe Pimenta de Araujo",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^18.0.3"
+  }
+}
