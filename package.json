@@ -10,15 +10,22 @@
     "make": "electron-forge make",
     "release": "electron-forge publish",
     "lint": "eslint . --ext js,ts",
-    "test": "jest"
+    "test": "jest",
+    "build:program-c": "V=1 make -C ./programs/program-c helloworld",
+    "clean:program-c": "V=1 make -C ./programs/program-c clean",
+    "clean": "npm run clean:program-c"
   },
   "keywords": [],
   "license": "MIT",
   "dependencies": {
+    "@solana/web3.js": "^1.37.1",
+    "mz": "^2.7.0",
+    "path": "^0.12.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hot-loader": "4.13.0",
-    "styled-components": "5.3.0"
+    "styled-components": "5.3.0",
+    "yaml": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.14.6",
@@ -37,6 +44,7 @@
     "@testing-library/react": "11.2.7",
     "@types/electron-devtools-installer": "2.2.0",
     "@types/jest": "26.0.23",
+    "@types/mz": "^2.7.4",
     "@types/react": "17.0.11",
     "@types/react-dom": "17.0.8",
     "@types/styled-components": "5.1.10",
@@ -45,6 +53,7 @@
     "babel-loader": "8.2.2",
     "cross-env": "7.0.3",
     "electron": "13.1.2",
+    "electron-is-dev": "^2.0.0",
     "eslint": "7.29.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",

@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import greeting from './services/greeting'
 
 export const api = {
   /**
@@ -11,8 +12,8 @@ export const api = {
 
   sendMessage: (message: string) => {
     ipcRenderer.send('message', message)
+    greeting();
   },
-
   /**
    * Provide an easier way to listen to events
    */

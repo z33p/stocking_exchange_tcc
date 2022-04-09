@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+import isDev from "electron-is-dev";
 
 let mainWindow: BrowserWindow | null
 
@@ -17,11 +18,15 @@ function createWindow () {
     height: 700,
     backgroundColor: '#191622',
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       contextIsolation: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
   })
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
+  }
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
 
@@ -35,7 +40,7 @@ async function registerListeners () {
    * This comes from bridge integration, check bridge.ts
    */
   ipcMain.on('message', (_, message) => {
-    console.log(message)
+    console.log(message + ", Raphael");
   })
 }
 
