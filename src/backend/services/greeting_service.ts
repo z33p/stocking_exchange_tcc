@@ -9,9 +9,9 @@ import {
 } from '@solana/web3.js';
 import * as borsh from 'borsh';
 import path from 'path';
-import * as solana_service from "../service/solana_service";
+import * as solana_service from "./solana_service";
 
-export default async function greeting() {
+export async function greeting() {
   console.log("Let's say hello to a Solana account...");
 
   // Say hello to an account

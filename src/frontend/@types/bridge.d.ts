@@ -1,4 +1,4 @@
-import { api } from '../bridge'
+import { api } from '../../domain/bridge'
 
 declare global {
   // eslint-disable-next-line

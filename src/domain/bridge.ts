@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import greeting from '../backend/business/greeting'
+import * as greeting_business from './business/greeting_business'
 
 export const api = {
   /**
@@ -12,7 +12,7 @@ export const api = {
 
   sendMessage: (message: string) => {
     ipcRenderer.send('message', message)
-    greeting();
+    greeting_business.greeting();
   },
   /**
    * Provide an easier way to listen to events
