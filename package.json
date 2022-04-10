@@ -11,9 +11,9 @@
     "release": "electron-forge publish",
     "lint": "eslint . --ext js,ts",
     "test": "jest",
-    "build:helloworld": "V=1 make -C ./dapps/helloworld helloworld",
-    "clean:helloworld": "V=1 make -C ./dapps/helloworld clean",
-    "clean": "npm run clean:helloworld"
+    "build:greeting": "V=1 make -C ./src/dapps/greeting greeting",
+    "clean:greeting": "V=1 make -C ./src/dapps/greeting clean",
+    "clean": "npm run clean:greeting"
   },
   "keywords": [],
   "license": "MIT",
