@@ -11,9 +11,9 @@
     "release": "electron-forge publish",
     "lint": "eslint . --ext js,ts",
     "test": "jest",
-    "build:program-c": "V=1 make -C ./programs/program-c helloworld",
-    "clean:program-c": "V=1 make -C ./programs/program-c clean",
-    "clean": "npm run clean:program-c"
+    "build:helloworld": "V=1 make -C ./dapps/helloworld helloworld",
+    "clean:helloworld": "V=1 make -C ./dapps/helloworld clean",
+    "clean": "npm run clean:helloworld"
   },
   "keywords": [],
   "license": "MIT",
@@ -91,10 +91,10 @@
               "entryPoints": [
                 {
                   "html": "./public/index.html",
-                  "js": "./src/index.tsx",
+                  "js": "./src/frontend/index.tsx",
                   "name": "main_window",
                   "preload": {
-                    "js": "./electron/bridge.ts"
+                    "js": "./src/frontend/bridge.ts"
                   }
                 }
               ]

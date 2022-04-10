@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import greeting from './services/greeting'
+import greeting from '../backend/business/greeting'
 
 export const api = {
   /**
