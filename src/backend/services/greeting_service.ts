@@ -59,32 +59,34 @@ class GreetingAccount {
  * Borsh schema definition for greeting accounts
  */
 const GreetingSchema = new Map([
-  [GreetingAccount, { kind: 'struct', fields: [['counter', 'u32']] }],
+  [
+    GreetingAccount,
+    {
+      kind: 'struct',
+      fields: [['counter', 'u32']]
+    }
+  ],
 ]);
 
 /**
  * The expected size of each greeting account.
  */
-const GREETING_SIZE = borsh.serialize(
-  GreetingSchema,
-  new GreetingAccount(),
-).length;
+const GREETING_SIZE = borsh.serialize(GreetingSchema, new GreetingAccount()).length;
 
 
 // Derive the address (public key) of a greeting account from the program so that it's easy to find later.
 const GREETING_SEED = 'hello';
 
 async function sayHello(): Promise<PublicKey> {
-  const payer = await solana_service.establishPayer(GREETING_SIZE);
   const conn = await solana_service.establishConnection();
 
+  const payer = await solana_service.establishPayer(conn, GREETING_SIZE);
   const programId = await solana_service.checkProgram(conn, PROGRAM_SO_PATH, PROGRAM_KEYPAIR_PATH);
 
-
   // Derive the address (public key) of a greeting account from the program so that it's easy to find later.
-  const greetedPubkey = await getGreetedPubKey(payer, programId, conn);
+  const greetedPubkey = await getGreetedPubKey(payer, programId);
 
-  await createGreetingAccountIfNotExists(programId, payer, conn, greetedPubkey);
+  await createGreetedAccountIfNotExists(conn, programId, payer, greetedPubkey);
 
   console.log('Saying hello to', greetedPubkey.toBase58());
   const instruction = new TransactionInstruction({
@@ -92,6 +94,7 @@ async function sayHello(): Promise<PublicKey> {
     programId,
     data: Buffer.alloc(0), // All instructions are hellos
   });
+
   await sendAndConfirmTransaction(
     conn,
     new Transaction().add(instruction),
@@ -101,9 +104,7 @@ async function sayHello(): Promise<PublicKey> {
   return greetedPubkey;
 }
 
-async function getGreetedPubKey(payer: Keypair, programId: PublicKey, conn: Connection) {
-  const GREETING_SEED = 'hello';
-
+async function getGreetedPubKey(payer: Keypair, programId: PublicKey) {
   const greetedPubkey = await PublicKey.createWithSeed(
     payer.publicKey,
     GREETING_SEED,
@@ -113,10 +114,14 @@ async function getGreetedPubKey(payer: Keypair, programId: PublicKey, conn: Conn
   return greetedPubkey;
 }
 
-async function createGreetingAccountIfNotExists(programId: PublicKey, payer: Keypair, conn: Connection, greetedPubkey: PublicKey) {
+async function createGreetedAccountIfNotExists(
+  conn: Connection,
+  programId: PublicKey,
+  payer: Keypair,
+  greetedPubkey: PublicKey,
+) {
   console.log(`Using program ${programId.toBase58()}`);
 
-  // Check if the greeting account has already been created
   const greetedAccount = await conn.getAccountInfo(greetedPubkey);
 
   if (greetedAccount)
@@ -128,9 +133,7 @@ async function createGreetingAccountIfNotExists(programId: PublicKey, payer: Key
     'to say hello to'
   );
 
-  const lamports = await conn.getMinimumBalanceForRentExemption(
-    GREETING_SIZE
-  );
+  const lamports = await conn.getMinimumBalanceForRentExemption(GREETING_SIZE);
 
   const transaction = new Transaction().add(
     SystemProgram.createAccountWithSeed({

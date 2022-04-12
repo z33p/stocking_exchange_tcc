@@ -5,7 +5,6 @@
 
 uint64_t greeting(SolParameters *params)
 {
-
   if (params->ka_num < 1)
   {
     sol_log("Greeted account not included in the instruction");

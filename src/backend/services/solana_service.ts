@@ -79,18 +79,15 @@ export async function establishConnection(): Promise<Connection> {
 /**
  * Establish an account to pay for everything
  */
-export async function establishPayer(dataLength: number): Promise<Keypair> {
-  let fees = 0;
-
-  const conn = await establishConnection();
-
+export async function establishPayer(conn: Connection, dataLength: number): Promise<Keypair> {
   const { feeCalculator } = await conn.getRecentBlockhash();
 
   // Calculate the cost to fund the greeter account
-  fees += await conn.getMinimumBalanceForRentExemption(dataLength);
+  let fees = await conn.getMinimumBalanceForRentExemption(dataLength);
 
   // Calculate the cost of sending transactions
   fees += feeCalculator.lamportsPerSignature * 100; // wag
+  console.log("Fee cost: ", fees);
 
   const payer = await getPayer();
 
@@ -101,7 +98,9 @@ export async function establishPayer(dataLength: number): Promise<Keypair> {
       payer.publicKey,
       fees - lamports,
     );
+
     await conn.confirmTransaction(sig);
+
     lamports = await conn.getBalance(payer.publicKey);
   }
 
