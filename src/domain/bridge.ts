@@ -1,5 +1,8 @@
+import "reflect-metadata";
 import { contextBridge, ipcRenderer } from 'electron'
-import * as greeting_business from './business/greeting_business'
+import { container } from "tsyringe";
+import GreetingBusiness from "./business/GreetingBusiness";
+
 
 export const api = {
   /**
@@ -12,7 +15,8 @@ export const api = {
 
   sendMessage: (message: string) => {
     ipcRenderer.send('message', message)
-    greeting_business.greeting();
+    const greetingBusiness = container.resolve(GreetingBusiness);
+    greetingBusiness.greeting();
   },
   /**
    * Provide an easier way to listen to events
