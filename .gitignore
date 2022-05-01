@@ -1,6 +1,9 @@
-.webpack
+.webpack/
 node_modules
 
 # solana
 dist
 test-ledger
+
+# Rust
+target
