@@ -1,12 +1,9 @@
-import { GlobalStyle } from './styles/GlobalStyle'
+import MainScreen from "./screens/MainScreen";
 
-import { Greetings } from './components/Greetings'
-
-export function App() {
+export default function App() {
   return (
     <>
-      <GlobalStyle />
-      <Greetings />
+      <MainScreen />
     </>
   )
 }
