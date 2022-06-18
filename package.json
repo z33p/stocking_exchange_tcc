@@ -1,8 +1,8 @@
 {
-  "name": "electron-react-typescript",
-  "author": "Diego Fernandes <diego.schell.f@gmail.com>",
+  "name": "stocking_exchange_tcc",
+  "author": "Raphael Pimenta <raphael00fellipe@gmail.com>",
   "version": "2.0.0",
-  "description": "An Electron boilerplate including TypeScript, React, Jest and ESLint.",
+  "description": "Descentralized Stock Exchange",
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -25,7 +25,6 @@
     "mz": "^2.7.0",
     "path": "^0.12.7",
     "react": "17.0.2",
-    "react-bootstrap": "^2.3.1",
     "react-dom": "17.0.2",
     "react-hot-loader": "4.13.0",
     "reflect-metadata": "^0.1.13",
