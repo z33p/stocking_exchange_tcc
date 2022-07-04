@@ -1,5 +1,3 @@
-import Button from 'react-bootstrap/Button';
-
 export default function Greetings() {
   function handleSayHello() {
     window.Main.sendMessage('Hello World');
@@ -9,8 +7,14 @@ export default function Greetings() {
 
   return (
     <div>
-      <Button onClick={handleSayHello}>Send message to main process</Button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleSayHello}
+      >
+        Send message to main process
+      </button>
     </div>
   )
 }
- 
+

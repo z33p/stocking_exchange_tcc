@@ -3,7 +3,6 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { container } from "tsyringe";
 import GreetingBusiness from "./business/GreetingBusiness";
 
-
 export const api = {
   /**
    * Here you can expose functions to the renderer process

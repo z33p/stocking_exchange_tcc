@@ -36,7 +36,7 @@ class GreetingService {
     const programId = await this._solanaService.checkProgram(conn, PROGRAM_SO_PATH, PROGRAM_KEYPAIR_PATH);
 
     // Derive the address (public key) of a greeting account from the program so that it's easy to find later.
-    const greetedPubkey = await this.getGreetedPubKey(payer, programId);
+    const greetedPubkey = await this.createGreetedPubKey(payer, programId);
 
     await this.createGreetedAccountIfNotExists(conn, programId, payer, greetedPubkey);
 
@@ -56,7 +56,7 @@ class GreetingService {
     return greetedPubkey;
   }
 
-  async getGreetedPubKey(payer: Keypair, programId: PublicKey) {
+  async createGreetedPubKey(payer: Keypair, programId: PublicKey): Promise<PublicKey> {
     const greetedPubkey = await PublicKey.createWithSeed(
       payer.publicKey,
       GREETING_SEED,
