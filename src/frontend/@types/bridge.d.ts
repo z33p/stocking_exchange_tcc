@@ -1,8 +1,9 @@
-import { api } from '../../domain/bridge'
+import Domain from "../../domain/bridge/domain";
+import Ipc from "../../domain/bridge/ipc";
 
 declare global {
-  // eslint-disable-next-line
   interface Window {
-    Main: typeof api
+    Domain: typeof Domain,
+    Ipc: typeof Ipc
   }
 }

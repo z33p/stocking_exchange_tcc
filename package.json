@@ -103,7 +103,7 @@
                   "js": "./src/frontend/index.tsx",
                   "name": "main_window",
                   "preload": {
-                    "js": "./src/domain/bridge.ts"
+                    "js": "./src/domain/bridge/bridge.ts"
                   }
                 }
               ]
