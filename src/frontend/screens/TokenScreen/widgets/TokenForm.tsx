@@ -2,14 +2,24 @@ import IEditableTokenForm from "../Dto/ITokenEditableForm";
 
 interface ITokenFormProps {
   textSubmitBtn: string;
-  onSubmitBtn: () => void;
+  onSubmitBtn: (token: Token) => void;
   editableTokenState: IEditableTokenForm;
 }
 
 export default function TokenForm({ editableTokenState: token, textSubmitBtn, onSubmitBtn }: ITokenFormProps) {
   return (
     <div id="token-form">
-      <form action="">
+      <form action="" onSubmit={e => {
+        e.preventDefault();
+        onSubmitBtn({
+          name: token.name,
+          description: token.description,
+          supply: token.supply,
+          address: null,
+          mint_authority: null,
+          freeze_authority: null,
+        });
+      }}>
         <div className="input-list">
           <input
             type="text"
@@ -34,7 +44,7 @@ export default function TokenForm({ editableTokenState: token, textSubmitBtn, on
         </div>
 
         <div id="token-form-submit-token">
-          <button className="btn-primary" onSubmit={onSubmitBtn}>
+          <button type="submit" className="btn-primary"> 
             {textSubmitBtn}
           </button>
         </div>

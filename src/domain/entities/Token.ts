@@ -2,7 +2,7 @@ interface Token {
     name: string;
     description: string;
     supply: number;
-    address: string;
-    mint_authority: string;
-    freeze_authority: string
+    address: string | null;
+    mint_authority: string | null;
+    freeze_authority: string | null
 }

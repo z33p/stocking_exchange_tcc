@@ -5,8 +5,15 @@ import IEditableTokenForm from "../Dto/ITokenEditableForm";
 import { TokenScreenContext } from "../TokenScreenContextProvider";
 import TokenForm from "./TokenForm";
 
+const { TokenBusiness } = window.Domain;
+
 export default function MintToken() {
-  const { tokenArray, selectedTokenIndex } = useContext(TokenScreenContext);
+  const {
+    tokenArray,
+    selectedTokenIndex,
+    setSelectedTokenIndex,
+    setTokenArray
+  } = useContext(TokenScreenContext);
 
   let tokenForm;
   if (selectedTokenIndex === null)
@@ -33,7 +40,12 @@ export default function MintToken() {
     return <TokenForm
       editableTokenState={editableTokenForm}
       textSubmitBtn="Mint"
-      onSubmitBtn={() => { }}
+      onSubmitBtn={(token) => {
+        console.log(token);
+        TokenBusiness.insert(token);
+        setTokenArray([...tokenArray, token]);
+        setSelectedTokenIndex(tokenArray.length)
+      }}
     />
   }
 
@@ -44,7 +56,9 @@ export default function MintToken() {
     return <TokenForm
       editableTokenState={editableTokenForm}
       textSubmitBtn="Save"
-      onSubmitBtn={() => { }}
+      onSubmitBtn={(token) => {
+        console.log(token);
+      }}
     />;
   }
 
