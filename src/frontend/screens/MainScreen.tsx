@@ -1,9 +1,12 @@
-import Greetings from "../widgets/Greetings";
+import "./MainScreen.css";
+import { VerticalNavBar } from "./widgets/VerticalNavBar";
+import TokenScreen from "./TokenScreen/TokenScreen";
 
 export default function MainScreen() {
   return (
-    <section>
-      <Greetings />
-    </section>
+    <div id="main-screen">
+      <VerticalNavBar />
+      <TokenScreen />
+    </div>
   )
 }

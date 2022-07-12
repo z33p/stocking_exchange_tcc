@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import isDev from "electron-is-dev";
+import { database } from '../data/DataConnection';
 
 let mainWindow: BrowserWindow | null
 
@@ -51,6 +52,7 @@ app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    database.close()
     app.quit()
   }
 })

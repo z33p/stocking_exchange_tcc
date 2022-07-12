@@ -1,0 +1,96 @@
+/* Token Screen */
+#token-screen {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 5fr 3fr;
+    text-align: center;
+}
+
+#token-screen > * {
+    display: grid;
+    grid-template-rows: 7em 1fr;
+    border-right: 1px solid rgba(0, 0, 0, 0.25);
+    padding: 1em;
+}
+
+/* List Tokens */
+#page-mint-token-btn {
+    text-align: right;
+    padding: .5em 0;
+}
+
+#page-mint-token-btn button {
+    display: inline-block;
+}
+
+#card-list-tokens {
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+#card-list-tokens table {
+    width: 100%;
+}
+
+#card-list-tokens tr:nth-child(even) {
+    background-color: #F2F2F2;
+}
+
+#card-list-tokens tbody tr:hover {
+    background-color: #DDD;
+    cursor: pointer;
+}
+
+#card-list-tokens thead td {
+    background-color: #48CD68;
+    padding: 1.2em 0;
+}
+
+#card-list-tokens tbody td {
+    padding: .8em 0;
+}
+
+/* MintToken */
+#token-form {
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#token-form form {
+    height: 100%;
+    width: 90%;
+}
+
+#token-form .input-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#token-form input:first-of-type {
+    margin-top: 3em;
+}
+
+#token-form input {
+    width: 100%;
+    padding: .8em .5em;
+    margin-bottom: 1em;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: .3em;
+
+    font-size: medium;
+}
+
+#token-form-submit-token {
+    text-align: right;
+}
+
+#token-form-submit-token button {
+    display: inline-block;
+}
