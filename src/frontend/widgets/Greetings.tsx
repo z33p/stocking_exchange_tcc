@@ -1,7 +1,6 @@
 export default function Greetings() {
   function handleSayHello() {
-    window.Main.sendMessage('Hello World');
-
+    window.Domain.GreetingBusiness.greeting();
     console.log('Message sent! Check main process log in terminal.')
   }
 
