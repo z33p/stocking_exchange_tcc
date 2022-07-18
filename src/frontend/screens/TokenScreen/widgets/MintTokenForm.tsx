@@ -31,8 +31,10 @@ export default function MintTokenForm() {
   function mintTokenForm() {
     let token: ITokenDto = {
       name: "Mint token",
-      description: "New token minted",
-      supply: 10000
+      supply: 10000,
+      address: "",
+      mint_authority: "",
+      freeze_authority: "",
     };
 
     const editableTokenForm: IEditableTokenForm = editableTokenState(token);
@@ -46,6 +48,7 @@ export default function MintTokenForm() {
         setTokenArray([...tokenArray, token]);
         setSelectedTokenIndex(tokenArray.length)
       }}
+      isBlockchainFieldsDisabled={false}
     />
   }
 
@@ -59,27 +62,32 @@ export default function MintTokenForm() {
       onSubmitBtn={(token) => {
         console.log(token);
       }}
+      isBlockchainFieldsDisabled
     />;
   }
 
   function editableTokenState(token: ITokenDto) {
     const [name, setName] = useState(token.name);
-    const [description, setDescription] = useState(token.description);
     const [supply, setSupply] = useState(token.supply);
+    const [mintAuthority, setMintAuthority] = useState(token.mint_authority);
+    const [freezeAuthority, setFreezeAuthority] = useState(token.freeze_authority);
 
     useEffect(() => {
       setName(token.name);
-      setDescription(token.description);
       setSupply(token.supply);
+      setMintAuthority(token.mint_authority);
+      setFreezeAuthority(token.freeze_authority);
     }, [selectedTokenIndex]);
 
     const editableTokenForm: IEditableTokenForm = {
       name,
       setName,
-      description,
-      setDescription,
       supply,
-      setSupply
+      setSupply,
+      mintAuthority,
+      setMintAuthority,
+      freezeAuthority,
+      setFreezeAuthority
     };
 
     return editableTokenForm;

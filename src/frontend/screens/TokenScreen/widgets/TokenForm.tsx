@@ -4,20 +4,20 @@ interface ITokenFormProps {
   textSubmitBtn: string;
   onSubmitBtn: (token: Token) => void;
   editableTokenState: IEditableTokenForm;
+  isBlockchainFieldsDisabled: boolean
 }
 
-export default function TokenForm({ editableTokenState: token, textSubmitBtn, onSubmitBtn }: ITokenFormProps) {
+export default function TokenForm({ editableTokenState: token, textSubmitBtn, onSubmitBtn, isBlockchainFieldsDisabled }: ITokenFormProps) {
   return (
     <div id="token-form">
       <form action="" onSubmit={e => {
         e.preventDefault();
         onSubmitBtn({
           name: token.name,
-          description: token.description,
           supply: token.supply,
           address: null,
-          mintAuthority: null,
-          freezeAuthority: null,
+          mint_authority: null,
+          freeze_authority: null,
         });
       }}>
         <div className="input-list">
@@ -32,14 +32,21 @@ export default function TokenForm({ editableTokenState: token, textSubmitBtn, on
             placeholder="Supply"
             value={token.supply}
             onChange={e => token.setSupply(e.target.valueAsNumber)}
+            disabled={isBlockchainFieldsDisabled}
           />
-          <input type="text" placeholder="Mint Authority" />
-          <input type="text" placeholder="Freeze Authority" />
           <input
             type="text"
-            placeholder="Description"
-            value={token.description}
-            onChange={e => token.setDescription(e.target.value)}
+            placeholder="Mint Authority"
+            value={token.mintAuthority ?? ""}
+            onChange={e => token.setMintAuthority(e.target.value)}
+            disabled={isBlockchainFieldsDisabled}
+          />
+          <input
+            type="text"
+            placeholder="Freeze Authority"
+            value={token.freezeAuthority ?? ""}
+            onChange={e => token.setFreezeAuthority(e.target.value)}
+            disabled={isBlockchainFieldsDisabled}
           />
         </div>
 

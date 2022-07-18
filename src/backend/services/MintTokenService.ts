@@ -3,56 +3,56 @@ import { PublicKey } from '@solana/web3.js';
 import SolanaService from './SolanaService';
 
 async function createToken(token: Token) {
-  console.log(`Minting new token ${token.name}`);
+    console.log(`Minting new token ${token.name}`);
 
-  const conn = await SolanaService.establishConnection();
-  const payer = await SolanaService.getPayer();
+    const conn = await SolanaService.establishConnection();
+    const payer = await SolanaService.getPayer();
 
-  const mintAuthority = token.mintAuthority
-      ? new PublicKey(token.mintAuthority)
-      : payer.publicKey;
+    const mintAuthority = token.mint_authority
+        ? new PublicKey(token.mint_authority)
+        : payer.publicKey;
 
-  const freezeAuthority = token.freezeAuthority
-      ? new PublicKey(token.freezeAuthority)
-      : null;
+    const freezeAuthority = token.freeze_authority
+        ? new PublicKey(token.freeze_authority)
+        : null;
 
-  const mint = await createMint(
-      conn,
-      payer,
-      mintAuthority,
-      freezeAuthority,
-      9 // We are using 9 to match the CLI decimal default exactly
-  );
+    const mint = await createMint(
+        conn,
+        payer,
+        mintAuthority,
+        freezeAuthority,
+        9 // We are using 9 to match the CLI decimal default exactly
+    );
 
-  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
-      conn,
-      payer,
-      mint,
-      payer.publicKey
-  );
+    const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+        conn,
+        payer,
+        mint,
+        payer.publicKey
+    );
 
-  await mintTo(
-      conn,
-      payer,
-      mint,
-      userTokenAccount.address,
-      payer,
-      token.supply
-  );
+    await mintTo(
+        conn,
+        payer,
+        mint,
+        userTokenAccount.address,
+        payer,
+        token.supply
+    );
 
-  token.address = mint.toBase58();
-  token.mintAuthority = mintAuthority.toBase58();
+    token.address = mint.toBase58();
+    token.mint_authority = mintAuthority.toBase58();
 
-  if (freezeAuthority)
-      token.freezeAuthority = freezeAuthority.toBase58();
+    if (freezeAuthority)
+        token.freeze_authority = freezeAuthority.toBase58();
 
-  console.log(`Token ${token.name} minted address ${token.address}`);
+    console.log(`Token ${token.name} minted address ${token.address}`);
 
-  return token;
+    return token;
 }
 
 const MintTokenService = {
-  createToken
+    createToken
 }
 
 export default MintTokenService;

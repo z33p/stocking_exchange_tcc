@@ -42,7 +42,6 @@ const CardListTokens = () => {
           {tokenArray.map((token, index) => (
             <tr key={index} onClick={() => OnClickTableRow(index)}>
               <td>{token.name}</td>
-              <td>{token.description}</td>
               <td>{token.supply}</td>
               <td>Send</td>
               <td>Receive</td>
@@ -58,7 +57,6 @@ const TableHead = () => (
   <thead>
     <tr>
       <td>Name</td>
-      <td>Description</td>
       <td>Amount</td>
       <td></td>
       <td></td>
