@@ -7,7 +7,7 @@ import TokenForm from "./TokenForm";
 
 const { TokenBusiness } = window.Domain;
 
-export default function MintToken() {
+export default function MintTokenForm() {
   const {
     tokenArray,
     selectedTokenIndex,
@@ -30,9 +30,9 @@ export default function MintToken() {
 
   function mintTokenForm() {
     let token: ITokenDto = {
-      name: "",
-      description: "",
-      supply: 0
+      name: "Mint token",
+      description: "New token minted",
+      supply: 10000
     };
 
     const editableTokenForm: IEditableTokenForm = editableTokenState(token);
@@ -42,7 +42,7 @@ export default function MintToken() {
       textSubmitBtn="Mint"
       onSubmitBtn={(token) => {
         console.log(token);
-        TokenBusiness.insert(token);
+        TokenBusiness.mintToken(token);
         setTokenArray([...tokenArray, token]);
         setSelectedTokenIndex(tokenArray.length)
       }}

@@ -16,8 +16,8 @@ export default function TokenForm({ editableTokenState: token, textSubmitBtn, on
           description: token.description,
           supply: token.supply,
           address: null,
-          mint_authority: null,
-          freeze_authority: null,
+          mintAuthority: null,
+          freezeAuthority: null,
         });
       }}>
         <div className="input-list">
@@ -44,7 +44,7 @@ export default function TokenForm({ editableTokenState: token, textSubmitBtn, on
         </div>
 
         <div id="token-form-submit-token">
-          <button type="submit" className="btn-primary"> 
+          <button type="submit" className="btn-primary">
             {textSubmitBtn}
           </button>
         </div>

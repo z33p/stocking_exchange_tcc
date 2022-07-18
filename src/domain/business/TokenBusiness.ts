@@ -1,16 +1,20 @@
 import TokenData from "../../backend/data/TokenData";
+import MintTokenService from "../../backend/services/MintTokenService";
 
 function getAllWithLimit(limit: { limit: number }) {
     return TokenData.getAllWithLimit(limit);
 }
 
-function insert(token: Token) {
-    return TokenData.insert(token);
+async function mintToken(token: Token) {
+    token = await MintTokenService.createToken(token);
+    TokenData.insert(token)
+
+    console.log("Token minted and inserted in database successfully")
 }
 
 const TokenBusiness = {
     getAllWithLimit,
-    insert
+    mintToken
 };
 
 export default TokenBusiness;

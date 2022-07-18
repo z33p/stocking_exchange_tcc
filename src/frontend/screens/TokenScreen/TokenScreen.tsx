@@ -1,7 +1,7 @@
 import "./TokenScreen.css";
 import TokenScreenContextProvider from "./TokenScreenContextProvider";
 import ListTokens from "./widgets/ListTokens";
-import MintToken from "./widgets/MintToken";
+import MintTokenForm from "./widgets/MintTokenForm";
 
 export default function TokenScreen() {
 
@@ -9,7 +9,7 @@ export default function TokenScreen() {
     <TokenScreenContextProvider>
       <div id="token-screen">
         <ListTokens />
-        <MintToken />
+        <MintTokenForm />
       </div>
     </TokenScreenContextProvider>
   )

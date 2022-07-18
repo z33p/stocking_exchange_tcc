@@ -3,6 +3,6 @@ interface Token {
     description: string;
     supply: number;
     address: string | null;
-    mint_authority: string | null;
-    freeze_authority: string | null
+    mintAuthority: string | null;
+    freezeAuthority: string | null
 }

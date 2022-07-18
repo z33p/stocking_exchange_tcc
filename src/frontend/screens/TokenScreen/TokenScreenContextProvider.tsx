@@ -12,10 +12,10 @@ export default function TokenScreenContextProvider({ children }: ITokenScreenCon
   const [tokenArray, setTokenArray] = useState<ITokenDto[]>([]);
 
   useEffect(() => {
-    const tokens = TokenBusiness.getAllWithLimit({ limit: 5 });
+    const tokens = TokenBusiness.getAllWithLimit({ limit: 10 });
     setTokenArray(tokens);
 
-    setSelectedTokenIndex(0);
+    // setSelectedTokenIndex(0);
   }, [])
 
   const initialContext: ITokenScreenContext = {
