@@ -1,5 +1,6 @@
+import { useRef } from "react";
 import { useEffect } from "react";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import ITokenDto from "../Dto/ITokenDto";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
 import { TokenScreenContext } from "../TokenScreenContextProvider";
@@ -40,7 +41,6 @@ export default function MintTokenForm() {
     const editableTokenForm: IEditableTokenForm = editableTokenState(token);
 
     return <TokenForm
-      editableTokenState={editableTokenForm}
       textSubmitBtn="Mint"
       onSubmitBtn={(token) => {
         console.log(token);
@@ -48,6 +48,7 @@ export default function MintTokenForm() {
         setTokenArray([...tokenArray, token]);
         setSelectedTokenIndex(tokenArray.length)
       }}
+      editableTokenState={editableTokenForm}
       isBlockchainFieldsDisabled={false}
     />
   }
@@ -57,37 +58,38 @@ export default function MintTokenForm() {
     const editableTokenForm: IEditableTokenForm = editableTokenState(token);
 
     return <TokenForm
-      editableTokenState={editableTokenForm}
       textSubmitBtn="Save"
       onSubmitBtn={(token) => {
         console.log(token);
       }}
+      editableTokenState={editableTokenForm}
       isBlockchainFieldsDisabled
     />;
   }
 
   function editableTokenState(token: ITokenDto) {
-    const [name, setName] = useState(token.name);
-    const [supply, setSupply] = useState(token.supply);
-    const [mintAuthority, setMintAuthority] = useState(token.mint_authority);
-    const [freezeAuthority, setFreezeAuthority] = useState(token.freeze_authority);
+    const nameRef = useRef<HTMLInputElement>(null);
+    const supplyRef = useRef<HTMLInputElement>(null);
+    const mintAuthorityRef = useRef<HTMLInputElement>(null);
+    const freezeAuthorityRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-      setName(token.name);
-      setSupply(token.supply);
-      setMintAuthority(token.mint_authority);
-      setFreezeAuthority(token.freeze_authority);
+      nameRef.current!.value = token.name;
+      supplyRef.current!.value = token.supply.toString();
+      mintAuthorityRef.current!.value = token.mint_authority ?? "";
+      freezeAuthorityRef.current!.value = token.freeze_authority ?? "";
+
     }, [selectedTokenIndex]);
 
     const editableTokenForm: IEditableTokenForm = {
-      name,
-      setName,
-      supply,
-      setSupply,
-      mintAuthority,
-      setMintAuthority,
-      freezeAuthority,
-      setFreezeAuthority
+      getName: () => nameRef.current!.value,
+      nameRef,
+      getSupply: () => supplyRef.current!.valueAsNumber,
+      supplyRef,
+      getMintAuthority: () => mintAuthorityRef.current!.value,
+      mintAuthorityRef,
+      getFreezeAuthority: () => freezeAuthorityRef.current!.value,
+      freezeAuthorityRef,
     };
 
     return editableTokenForm;

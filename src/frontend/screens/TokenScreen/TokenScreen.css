@@ -3,7 +3,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 5fr 3fr;
+    grid-template-columns: 1fr 1fr;
     text-align: center;
 }
 
@@ -70,17 +70,16 @@
 #token-form .input-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
-#token-form input:first-of-type {
+#token-form .input-list > *:first-of-type {
     margin-top: 3em;
 }
 
 #token-form input {
     width: 100%;
     padding: .8em .5em;
-    margin-bottom: 1em;
+    margin-bottom: .7em;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: .3em;
 

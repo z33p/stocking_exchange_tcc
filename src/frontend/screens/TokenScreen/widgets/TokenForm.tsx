@@ -1,3 +1,5 @@
+import { RefObject, useState } from "react";
+import { useEffect } from "react";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
 
 interface ITokenFormProps {
@@ -7,45 +9,44 @@ interface ITokenFormProps {
   isBlockchainFieldsDisabled: boolean
 }
 
-export default function TokenForm({ editableTokenState: token, textSubmitBtn, onSubmitBtn, isBlockchainFieldsDisabled }: ITokenFormProps) {
+export default function TokenForm({
+  editableTokenState: token,
+  textSubmitBtn,
+  onSubmitBtn,
+  isBlockchainFieldsDisabled,
+}: ITokenFormProps) {
   return (
     <div id="token-form">
-      <form action="" onSubmit={e => {
+      <form action="submit" onSubmit={e => {
         e.preventDefault();
+
         onSubmitBtn({
-          name: token.name,
-          supply: token.supply,
-          address: null,
-          mint_authority: null,
-          freeze_authority: null,
+          name: token.getName(),
+          supply: token.getSupply(),
+          address: null, // token.getAddress(),
+          mint_authority: token.getMintAuthority(),
+          freeze_authority: token.getFreezeAuthority(),
         });
       }}>
         <div className="input-list">
-          <input
-            type="text"
+          <InputTokenForm
+            fieldRef={token.nameRef}
             placeholder="Name"
-            value={token.name}
-            onChange={e => token.setName(e.target.value)}
           />
-          <input
+          <InputTokenForm
             type="number"
+            fieldRef={token.supplyRef}
             placeholder="Supply"
-            value={token.supply}
-            onChange={e => token.setSupply(e.target.valueAsNumber)}
             disabled={isBlockchainFieldsDisabled}
           />
-          <input
-            type="text"
+          <InputTokenForm
+            fieldRef={token.mintAuthorityRef}
             placeholder="Mint Authority"
-            value={token.mintAuthority ?? ""}
-            onChange={e => token.setMintAuthority(e.target.value)}
             disabled={isBlockchainFieldsDisabled}
           />
-          <input
-            type="text"
+          <InputTokenForm
+            fieldRef={token.freezeAuthorityRef}
             placeholder="Freeze Authority"
-            value={token.freezeAuthority ?? ""}
-            onChange={e => token.setFreezeAuthority(e.target.value)}
             disabled={isBlockchainFieldsDisabled}
           />
         </div>
@@ -58,4 +59,64 @@ export default function TokenForm({ editableTokenState: token, textSubmitBtn, on
       </form>
     </div>
   );
+
+  function InputTokenForm(
+    {
+      type,
+      fieldRef,
+      placeholder,
+      disabled
+    }
+      :
+      {
+        type?: string;
+        fieldRef: RefObject<HTMLInputElement>;
+        placeholder: string;
+        disabled?: boolean
+      }
+  ) {
+    const [showLabel, setShowLabel] = useState(false);
+
+    useEffect(() => {
+      // TODO: Understand and fix why this only works with timeout
+      const timeout = setTimeout(() => {
+        if (fieldRef.current && fieldRef.current.value.length > 0) {
+          if (showLabel === false)
+            setShowLabel(true);
+        } else if (showLabel) {
+          setShowLabel(false);
+        }
+      }, 1);
+
+      return () => {
+        clearTimeout(timeout);
+      }
+    }, []);
+
+
+    return (
+      <div className="text-left">
+        <small style={{ color: "#888", visibility: showLabel ? "visible" : "hidden" }}>
+          {placeholder}
+        </small>
+
+        <input
+          ref={fieldRef}
+          type={type ?? "text"}
+          placeholder={placeholder}
+          disabled={disabled}
+          onChange={(e) => {
+            if (e.target.value.length > 0) {
+              if (showLabel === false)
+                setShowLabel(true);
+            } else if (showLabel) {
+              setShowLabel(false);
+            }
+          }}
+        />
+      </div>
+    );
+  }
 }
+
+
