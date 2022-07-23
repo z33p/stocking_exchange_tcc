@@ -42,9 +42,10 @@ const CardListTokens = () => {
           {tokenArray.map((token, index) => (
             <tr key={index} onClick={() => OnClickTableRow(index)}>
               <td>{token.name}</td>
-              <td>{token.supply}</td>
-              <td>Send</td>
-              <td>Receive</td>
+              <td>{token.supply.toLocaleString()}</td>
+              <td>{token.address}</td>
+              <td>{token.mint_authority}</td>
+              <td>{token.freeze_authority ? token.freeze_authority : " - "}</td>
             </tr>
           ))}
         </tbody>
@@ -58,8 +59,9 @@ const TableHead = () => (
     <tr>
       <td>Name</td>
       <td>Amount</td>
-      <td></td>
-      <td></td>
+      <td>Address</td>
+      <td>Mint Authority</td>
+      <td>Freeze Authority</td>
     </tr>
   </thead>
 )
