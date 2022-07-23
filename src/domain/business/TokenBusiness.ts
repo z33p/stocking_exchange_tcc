@@ -1,8 +1,8 @@
 import TokenData from "../../backend/data/TokenData";
 import MintTokenService from "../../backend/services/MintTokenService";
 
-function getAllWithLimit(limit: { limit: number }) {
-    return TokenData.getAllWithLimit(limit);
+function getAllWithLimit(params: { limit: number }) {
+    return TokenData.getAllWithLimit(params);
 }
 
 async function mintToken(token: Token) {

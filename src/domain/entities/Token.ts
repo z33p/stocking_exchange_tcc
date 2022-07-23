@@ -1,7 +1,7 @@
 interface Token {
     name: string;
-    supply: number;
-    address: string | null;
-    mint_authority: string | null;
+    supply: bigint;
+    address: string;
+    mint_authority: string;
     freeze_authority: string | null
 }
