@@ -1,5 +1,6 @@
 table {
     width: 100%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 tr:nth-child(even) {
@@ -12,7 +13,7 @@ tbody tr:hover {
 }
 
 thead td {
-    padding: 1.5em;
+    padding: 1.2em;
     font-size: large;
     font-weight: bold;
     background-color: #48CD68;

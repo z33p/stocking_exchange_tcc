@@ -5,8 +5,6 @@
 
     display: grid;
     grid-template-rows: 8rem 1fr;  /* 8rem based on page title */
-
-    background-color: #CECECE;
 }
 
 #wallet-screen > section {
