@@ -43,7 +43,7 @@ const CardListTokens = () => {
               <td>{token.supply.toLocaleString()}</td>
               <td>{token.address}</td>
               <td>{token.mint_authority}</td>
-              <td>{token.freeze_authority ? token.freeze_authority : " - "}</td>
+              <td>{token.freeze_authority ? token.freeze_authority : "None"}</td>
             </tr>
           ))}
         </tbody>
