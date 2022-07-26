@@ -1,28 +1,13 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext } from "react";
 import ITokenDto from "./Dto/ITokenDto";
-
-const { TokenBusiness } = window.Domain;
+import { ITokenScreenContext } from "./TokenScreen";
 
 interface ITokenScreenContextProvider {
   children: JSX.Element;
+  initialContext: ITokenScreenContext;
 }
 
-export default function TokenScreenContextProvider({ children }: ITokenScreenContextProvider) {
-  const [selectedTokenIndex, setSelectedTokenIndex] = useState<number | null>(null);
-  const [tokenArray, setTokenArray] = useState<ITokenDto[]>([]);
-
-  useEffect(() => {
-    const tokens = TokenBusiness.getAllWithLimit({ limit: 10 });
-    setTokenArray(tokens);
-  }, [])
-
-  const initialContext: ITokenScreenContext = {
-    tokenArray,
-    setTokenArray,
-    selectedTokenIndex,
-    setSelectedTokenIndex
-  }
-
+export default function TokenScreenContextProvider({ children, initialContext }: ITokenScreenContextProvider) {
   return (
     <TokenScreenContext.Provider value={initialContext}>
       {children}
@@ -31,11 +16,3 @@ export default function TokenScreenContextProvider({ children }: ITokenScreenCon
 }
 
 export const TokenScreenContext = createContext<ITokenScreenContext>({} as ITokenScreenContext);
-
-interface ITokenScreenContext {
-  tokenArray: ITokenDto[];
-  setTokenArray: React.Dispatch<React.SetStateAction<ITokenDto[]>>;
-
-  selectedTokenIndex: number | null;
-  setSelectedTokenIndex: React.Dispatch<React.SetStateAction<number | null>>;
-}

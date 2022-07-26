@@ -1,6 +1,8 @@
 import { RefObject, useState } from "react";
+import { useContext } from "react";
 import { useEffect } from "react";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
+import { TokenScreenContext } from "../TokenScreenContextProvider";
 
 interface ITokenFormProps {
   textSubmitBtn: string;
@@ -15,16 +17,22 @@ export default function TokenForm({
   onSubmitBtn,
   isBlockchainFieldsDisabled,
 }: ITokenFormProps) {
+  const { handleSetOpenMintTokenForm } = useContext(TokenScreenContext);
+
   return (
     <div id="token-form">
+      <div className="back-button-div">
+        <button className="btn-gray" onClick={() => handleSetOpenMintTokenForm(false)}>Back</button>
+      </div>
+
       <form action="submit" onSubmit={e => {
         e.preventDefault();
 
         onSubmitBtn({
           name: token.getName(),
-          supply: token.getSupply(),
-          address: null, // token.getAddress(),
-          mint_authority: token.getMintAuthority(),
+          supply: 0n, // token.getSupply(),
+          address: "", //token.getAddress(),
+          mint_authority: token.getMintAuthority()!,
           freeze_authority: token.getFreezeAuthority(),
         });
       }}>

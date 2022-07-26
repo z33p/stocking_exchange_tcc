@@ -2,25 +2,23 @@ import { useContext } from "react";
 import { TokenScreenContext as TokenScreenContext } from "../TokenScreenContextProvider";
 
 export default function ListTokens() {
-  const { selectedTokenIndex, setSelectedTokenIndex, setTokenArray } = useContext(TokenScreenContext);
+  const { openMintTokenForm, handleSetOpenMintTokenForm } = useContext(TokenScreenContext);
 
   function OnClickOpenPageMintToken() {
-    setSelectedTokenIndex(null);
+    handleSetOpenMintTokenForm(true);
   }
 
   return (
     <div id="list-token-screen">
-      <div className="">
-        <h1>List Token</h1>
-        <div id="page-mint-token-btn">
-          <button
-            className="btn-primary"
-            onClick={() => OnClickOpenPageMintToken()}
-            disabled={selectedTokenIndex === null}
-          >
-            + Mint Token
-          </button>
-        </div>
+      <h1 className="page-title">List Token</h1>
+      <div id="page-mint-token-btn">
+        <button
+          className="btn-primary"
+          onClick={() => OnClickOpenPageMintToken()}
+          disabled={openMintTokenForm}
+        >
+          + Mint Token
+        </button>
       </div>
       <CardListTokens />
     </div>
@@ -28,10 +26,10 @@ export default function ListTokens() {
 }
 
 const CardListTokens = () => {
-  const { tokenArray, setSelectedTokenIndex } = useContext(TokenScreenContext);
+  const { tokenArray, handleSetSelectedTokenIndex } = useContext(TokenScreenContext);
 
   function OnClickTableRow(index: number) {
-    setSelectedTokenIndex(index);
+    handleSetSelectedTokenIndex(index);
   }
 
   return (

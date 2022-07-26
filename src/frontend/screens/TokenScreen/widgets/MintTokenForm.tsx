@@ -12,7 +12,7 @@ export default function MintTokenForm() {
   const {
     tokenArray,
     selectedTokenIndex,
-    setSelectedTokenIndex,
+    handleSetSelectedTokenIndex,
     setTokenArray
   } = useContext(TokenScreenContext);
 
@@ -24,7 +24,7 @@ export default function MintTokenForm() {
 
   return (
     <div id="mint-token-screen">
-      <h1>Mint Token</h1>
+      <h1 className="page-title">Mint Token</h1>
       {tokenForm}
     </div>
   )
@@ -32,7 +32,7 @@ export default function MintTokenForm() {
   function mintTokenForm() {
     let token: ITokenDto = {
       name: "Mint token",
-      supply: 10000,
+      supply: 10000n,
       address: "",
       mint_authority: "",
       freeze_authority: "",
@@ -46,7 +46,7 @@ export default function MintTokenForm() {
         console.log(token);
         TokenBusiness.mintToken(token);
         setTokenArray([...tokenArray, token]);
-        setSelectedTokenIndex(tokenArray.length)
+        handleSetSelectedTokenIndex(tokenArray.length)
       }}
       editableTokenState={editableTokenForm}
       isBlockchainFieldsDisabled={false}
