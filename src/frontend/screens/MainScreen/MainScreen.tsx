@@ -7,7 +7,7 @@ import TradeScreen from "../TradeScreen/TradeScreen";
 import { useState } from "react";
 
 export default function MainScreen() {
-  const [selectedScreen, setSelectedScreen] = useState<MyAppScreens | null>(0);
+  const [selectedScreen, setSelectedScreen] = useState<MyAppScreens | null>(MyAppScreens.LIST_TOKENS);
 
   function handleSetSelectedScreen(newSelectedScreen: MyAppScreens | null) {
     if (selectedScreen === newSelectedScreen)

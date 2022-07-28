@@ -19,7 +19,7 @@ export default function WalletScreen() {
     AccountBusiness
       .getAllWithLimit({ limit: 10 })
       .then((accounts) => setAccountsArray(accounts));
-  })
+  }, []);
 
   return (
     <div id="wallet-screen">
