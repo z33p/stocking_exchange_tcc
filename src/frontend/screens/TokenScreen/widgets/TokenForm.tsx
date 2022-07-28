@@ -1,12 +1,13 @@
 import { RefObject, useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
+import SplToken from "../../../../domain/entities/SplToken";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
 import { TokenScreenContext } from "../TokenScreenContextProvider";
 
 interface ITokenFormProps {
   textSubmitBtn: string;
-  onSubmitBtn: (token: Token) => void;
+  onSubmitBtn: (token: SplToken) => void;
   editableTokenState: IEditableTokenForm;
   isBlockchainFieldsDisabled: boolean
 }
@@ -34,6 +35,7 @@ export default function TokenForm({
           address: "", //token.getAddress(),
           mint_authority: token.getMintAuthority()!,
           freeze_authority: token.getFreezeAuthority(),
+          is_swap_pool: false
         });
       }}>
         <div className="input-list">

@@ -1,8 +1,9 @@
 import { createMint, getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
+import SplToken from '../../domain/entities/SplToken';
 import SolanaService from './SolanaService';
 
-async function createToken(token: Token) {
+async function createToken(token: SplToken) {
     console.log(`Minting new token ${token.name}`);
 
     const conn = await SolanaService.establishConnection();
