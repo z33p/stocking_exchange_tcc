@@ -1,7 +1,4 @@
-import "reflect-metadata";
 import { ipcRenderer } from 'electron'
-import { container } from "tsyringe";
-import GreetingBusiness from "../business/GreetingBusiness";
 /**
    * Here you can expose functions to the renderer process
    * so they can interact with the main (electron) side

@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import AccountBusiness from "../business/AccountBusiness";
 import GreetingBusiness from "../business/GreetingBusiness";
 import TokenBusiness from "../business/TokenBusiness";
