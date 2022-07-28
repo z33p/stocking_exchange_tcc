@@ -31,7 +31,7 @@ export default function TokenForm({
 
         onSubmitBtn({
           name: token.getName(),
-          supply: 0n, // token.getSupply(),
+          supply: token.getSupply(),
           address: "", //token.getAddress(),
           mint_authority: token.getMintAuthority()!,
           freeze_authority: token.getFreezeAuthority(),

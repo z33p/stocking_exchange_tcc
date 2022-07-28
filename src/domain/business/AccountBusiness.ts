@@ -21,12 +21,9 @@ async function getAllWithLimit(params: { limit: number }) {
 
         const tokenAccount = {
             tokenName: token.name,
-            balance: solanaTokenAccount.amount,
+            balance: solanaTokenAccount.amount.toBuffer().readBigUInt64BE(),
             address: solanaTokenAccount.address.toBase58()
         };
-
-        console.table(solanaTokenAccount);
-        console.table(tokenAccount);
 
         return tokenAccount;
     }));

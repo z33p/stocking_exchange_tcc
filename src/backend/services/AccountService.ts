@@ -1,4 +1,4 @@
-import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 
 async function getAccount(
@@ -7,15 +7,9 @@ async function getAccount(
     mint: PublicKey
 ) {
     console.log("Fetching or creating associated token account");
-    const tokenAccount = await getOrCreateAssociatedTokenAccount(
-      conn,
-      userKeyPair,
-      mint,
-      userKeyPair.publicKey
-    );
+    const token = new Token(conn, mint, TOKEN_PROGRAM_ID, userKeyPair);
+    const tokenAccount = await token.getOrCreateAssociatedAccountInfo(userKeyPair.publicKey);
   
-    console.log("Token associated account: ", tokenAccount.address.toBase58());
-
     return tokenAccount;
   }
 

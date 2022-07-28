@@ -39,7 +39,7 @@ export default function WalletScreen() {
           <tbody>
             {
               accountsArray.map(account => (
-                <tr>
+                <tr key={account.address}>
                   <td colSpan={colSpan.name}>{account.tokenName}</td>
                   <td colSpan={colSpan.balance}>{account.balance.toLocaleString()}</td>
                   <td colSpan={colSpan.address}>{account.address}</td>

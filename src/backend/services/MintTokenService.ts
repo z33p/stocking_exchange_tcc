@@ -1,4 +1,4 @@
-import { createMint, getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token';
+import { Token, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { PublicKey } from '@solana/web3.js';
 import SplToken from '../../domain/entities/SplToken';
 import SolanaService from './SolanaService';
@@ -17,31 +17,19 @@ async function createToken(token: SplToken) {
         ? new PublicKey(token.freeze_authority)
         : null;
 
-    const mint = await createMint(
+    const mint = await Token.createMint(
         conn,
         payer,
         mintAuthority,
         freezeAuthority,
-        9 // We are using 9 to match the CLI decimal default exactly
+        2,
+        TOKEN_PROGRAM_ID
     );
 
-    const userTokenAccount = await getOrCreateAssociatedTokenAccount(
-        conn,
-        payer,
-        mint,
-        payer.publicKey
-    );
+    const userTokenAccount = await mint.createAccount(payer.publicKey);
+    await mint.mintTo(userTokenAccount, payer, [], token.supply);
 
-    await mintTo(
-        conn,
-        payer,
-        mint,
-        userTokenAccount.address,
-        payer,
-        token.supply
-    );
-
-    token.address = mint.toBase58();
+    token.address = mint.publicKey.toBase58();
     token.mint_authority = mintAuthority.toBase58();
 
     if (freezeAuthority)
