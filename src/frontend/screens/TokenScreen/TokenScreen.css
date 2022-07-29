@@ -1,14 +1,17 @@
 /* Token Screen */
 #token-screen {
-    height: 100%;
     width: 100%;
+    height: 100%;
     text-align: center;
-    padding: 3em;
+
+    display: grid;
+    grid-template-rows: 8rem 1fr;  /* 8rem based on page title */
 }
 
-#token-screen>* {
-    padding: 1em;
-    height: calc(95% - 3em);
+#list-token-screen-body,
+#mint-token-screen-body {
+    margin: 3em;
+    background-color: white;
 }
 
 /* List Tokens */
@@ -28,12 +31,15 @@
 
 /* MintToken */
 #token-form {
-    height: 97%;
+    height: 100%;
     width: 100%;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    border-radius: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 3em;;
 }
 
 #token-form form {
@@ -70,7 +76,6 @@
 
 .back-button-div {
     width: 100%;
-    padding-top: 2em;
     padding-left: 4em;
     text-align: left;
 }

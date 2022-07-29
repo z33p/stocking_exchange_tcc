@@ -2,6 +2,7 @@ import { RefObject, useState } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
 import SplToken from "../../../../domain/entities/SplToken";
+import TokenTypeEnum from "../../../../domain/enums/TokenTypeEnum";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
 import { TokenScreenContext } from "../TokenScreenContextProvider";
 
@@ -31,11 +32,11 @@ export default function TokenForm({
 
         onSubmitBtn({
           name: token.getName(),
-          supply: token.getSupply(),
+          supply: BigInt(token.getSupply()),
           address: "", //token.getAddress(),
           mint_authority: token.getMintAuthority()!,
           freeze_authority: token.getFreezeAuthority(),
-          is_swap_pool: false
+          token_type: TokenTypeEnum.COIN
         });
       }}>
         <div className="input-list">

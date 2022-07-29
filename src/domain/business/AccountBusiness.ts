@@ -6,6 +6,26 @@ import SplToken from "../entities/SplToken";
 import IAccountDto from "./Dto/IAccountDto";
 
 
+async function getTokenAccountFromOwner(tokenPk: string) : Promise<IAccountDto> {
+    const conn = await SolanaService.establishConnection()
+    const owner = await SolanaService.getPayer();
+
+    const accountInfo = await AccountService.getAccount(
+        conn,
+        owner,
+        new PublicKey(tokenPk)
+    );
+
+    const account = {
+        tokenName: "",
+        address: accountInfo.address.toBase58(),
+        balance: accountInfo.amount.toBuffer().readBigUInt64LE(),
+    }
+
+    return account;
+}
+
+
 async function getAllWithLimit(params: { limit: number }) {
     const tokens = SplTokenData.getAllWithLimit(params);
 
@@ -13,7 +33,7 @@ async function getAllWithLimit(params: { limit: number }) {
     const userKeyPair = await SolanaService.getPayer();
 
     const accounts = await Promise.all(tokens.map(async (token: SplToken): Promise<IAccountDto> => {
-        const solanaTokenAccount = await AccountService.getAccount(
+        const splTokenAccount = await AccountService.getAccount(
             conn,
             userKeyPair,
             new PublicKey(token.address)
@@ -21,8 +41,8 @@ async function getAllWithLimit(params: { limit: number }) {
 
         const tokenAccount = {
             tokenName: token.name,
-            balance: solanaTokenAccount.amount.toBuffer().readBigUInt64BE(),
-            address: solanaTokenAccount.address.toBase58()
+            balance: splTokenAccount.amount.toBuffer().readBigUInt64LE(),
+            address: splTokenAccount.address.toBase58()
         };
 
         return tokenAccount;
@@ -32,7 +52,8 @@ async function getAllWithLimit(params: { limit: number }) {
 }
 
 const AccountBusiness = {
-    getAllWithLimit
+    getAllWithLimit,
+    getTokenAccountFromOwner
 };
 
 export default AccountBusiness;

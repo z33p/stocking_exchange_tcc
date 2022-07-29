@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@solana/spl-token": "0.1.8",
+    "@solana/spl-token-swap": "^0.2.0",
     "@solana/web3.js": "^1.37.1",
     "better-sqlite3": "^7.6.0",
     "bootstrap": "^5.1.3",

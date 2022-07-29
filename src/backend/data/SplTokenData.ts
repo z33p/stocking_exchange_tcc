@@ -1,11 +1,12 @@
 import SplToken from "../../domain/entities/SplToken";
+import TokenTypeEnum from "../../domain/enums/TokenTypeEnum";
 import { database } from "./DataConnection";
 
 function getAllWithLimit(params: {
     limit: number;
 }): SplToken[] {
     const stmt = database
-        .prepare("SELECT * FROM tb_spl_token ORDER BY 1 LIMIT :limit");
+        .prepare(`SELECT * FROM tb_spl_token WHERE token_type<>${TokenTypeEnum.TOKEN_POOL} ORDER BY rowid LIMIT :limit`);
 
     return stmt.all(params) as SplToken[];
 
@@ -28,7 +29,7 @@ function insert(token: SplToken) {
         '${token.address}',
         '${token.mint_authority}',
         '${token.freeze_authority}',
-        ${token.is_swap_pool ? 1 : 0}
+        ${token.token_type}
     )`;
 
     const stmt = database.prepare(sql);

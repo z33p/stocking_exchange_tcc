@@ -11,16 +11,18 @@ export default function ListTokens() {
   return (
     <div id="list-token-screen">
       <h1 className="page-title">List Token</h1>
-      <div id="page-mint-token-btn">
-        <button
-          className="btn-primary"
-          onClick={() => OnClickOpenPageMintToken()}
-          disabled={openMintTokenForm}
-        >
-          + Mint Token
-        </button>
+      <div id="list-token-screen-body">
+        <div id="page-mint-token-btn">
+          <button
+            className="btn-primary"
+            onClick={() => OnClickOpenPageMintToken()}
+            disabled={openMintTokenForm}
+          >
+            + Mint Token
+          </button>
+        </div>
+        <CardListTokens />
       </div>
-      <CardListTokens />
     </div>
   )
 }

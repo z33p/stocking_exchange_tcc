@@ -1,5 +1,5 @@
 import SplTokenData from "../../backend/data/SplTokenData";
-import MintTokenService from "../../backend/services/MintTokenService";
+import AmmService from "../../backend/services/AmmService";
 import SplToken from "../entities/SplToken";
 
 function getAllWithLimit(params: { limit: number }) {
@@ -7,9 +7,7 @@ function getAllWithLimit(params: { limit: number }) {
 }
 
 async function mintToken(token: SplToken) {
-    token = await MintTokenService.createToken(token);
-    SplTokenData.insert(token)
-
+    await AmmService.createMintAmm(token);
     console.log("Token minted and inserted in database successfully")
 }
 

@@ -25,14 +25,16 @@ export default function MintTokenForm() {
   return (
     <div id="mint-token-screen">
       <h1 className="page-title">Mint Token</h1>
-      {tokenForm}
+      <div id="mint-token-screen-body">
+        {tokenForm}
+      </div>
     </div>
   )
 
   function mintTokenForm() {
     let token: ITokenDto = {
-      name: "Mint token",
-      supply: 10000n,
+      name: "WBTC",
+      supply: BigInt(500_000),
       address: "",
       mint_authority: "",
       freeze_authority: "",
