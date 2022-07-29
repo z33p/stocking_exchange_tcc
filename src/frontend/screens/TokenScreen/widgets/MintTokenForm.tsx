@@ -16,6 +16,7 @@ export default function MintTokenForm() {
     tokenArray,
     selectedTokenIndex,
     handleSetSelectedTokenIndex,
+    handleSetOpenMintTokenForm,
     setTokenArray,
   } = useContext(TokenScreenContext);
 
@@ -65,6 +66,7 @@ export default function MintTokenForm() {
           console.error(error);
           alert("Error")
         } finally {
+          handleSetOpenMintTokenForm(false)
           setLoading(false);
         }
       }}

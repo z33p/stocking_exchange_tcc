@@ -58,7 +58,7 @@ const TableHead = () => (
   <thead>
     <tr>
       <td>Name</td>
-      <td>Amount</td>
+      <td>Supply</td>
       <td>Address</td>
       <td>Mint Authority</td>
       <td>Freeze Authority</td>

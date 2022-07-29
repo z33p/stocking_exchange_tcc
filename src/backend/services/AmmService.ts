@@ -169,8 +169,10 @@ async function createMintAndAccount(
   const mintAccount = await mint.createAccount(accountAuthority);
   const userAccount = await mint.createAssociatedTokenAccount(owner.publicKey);
 
-  await mint.mintTo(mintAccount, owner, [], Number(token.supply));
-  await mint.mintTo(userAccount, owner, [], Number(token.supply));
+  await Promise.all([
+    mint.mintTo(mintAccount, owner, [], Number(token.supply)),
+    mint.mintTo(userAccount, owner, [], Number(token.supply))
+  ]);
 
   return { mint, mintAccount };
 }
