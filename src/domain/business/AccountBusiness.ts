@@ -5,12 +5,31 @@ import SolanaService from "../../backend/services/SolanaService";
 import SplToken from "../entities/SplToken";
 import IAccountDto from "./Dto/IAccountDto";
 
+async function getTokenAccount(tokenPk: string, accountPk: string) : Promise<IAccountDto> {
+    const conn = await SolanaService.establishConnection()
+    const owner = await SolanaService.getPayer();
+
+    const accountInfo = await AccountService.getAccount(
+        conn,
+        owner,
+        new PublicKey(tokenPk),
+        new PublicKey(accountPk)
+    );
+
+    const account = {
+        tokenName: "",
+        address: accountInfo.address.toBase58(),
+        balance: accountInfo.amount.toBuffer().readBigUInt64LE(),
+    }
+
+    return account;
+}
 
 async function getTokenAccountFromOwner(tokenPk: string) : Promise<IAccountDto> {
     const conn = await SolanaService.establishConnection()
     const owner = await SolanaService.getPayer();
 
-    const accountInfo = await AccountService.getAccount(
+    const accountInfo = await AccountService.getAssociatedAccount(
         conn,
         owner,
         new PublicKey(tokenPk)
@@ -33,7 +52,7 @@ async function getAllWithLimit(params: { limit: number }) {
     const userKeyPair = await SolanaService.getPayer();
 
     const accounts = await Promise.all(tokens.map(async (token: SplToken): Promise<IAccountDto> => {
-        const splTokenAccount = await AccountService.getAccount(
+        const splTokenAccount = await AccountService.getAssociatedAccount(
             conn,
             userKeyPair,
             new PublicKey(token.address)
@@ -53,7 +72,8 @@ async function getAllWithLimit(params: { limit: number }) {
 
 const AccountBusiness = {
     getAllWithLimit,
-    getTokenAccountFromOwner
+    getTokenAccountFromOwner,
+    getTokenAccount
 };
 
 export default AccountBusiness;

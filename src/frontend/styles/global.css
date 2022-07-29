@@ -22,6 +22,12 @@ ul {
     background-color: rgba(72, 205, 104, 0.8);
 }
 
+button:disabled,
+button:disabled:hover {
+    cursor: not-allowed;
+    background-color: gainsboro !important;
+}
+
 .btn-gray {
     padding: .4em 2em;
     font-weight: bold;

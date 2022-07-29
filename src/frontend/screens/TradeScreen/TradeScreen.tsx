@@ -1,6 +1,8 @@
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import IAccountDto from "../../../domain/business/Dto/IAccountDto";
 import SplToken from "../../../domain/entities/SplToken";
+import SwapTokenAmm from "../../../domain/entities/SwapTokenAmm";
+import TokenTypeEnum from "../../../domain/enums/TokenTypeEnum";
 import { MainScreenContext } from "../MainScreen/MainScreenContextProvider";
 import "./TradeScreen.css";
 
@@ -11,15 +13,16 @@ function TradeScreen() {
   const [tokenArray, setTokenArray] = useState<SplToken[]>([]);
 
   useEffect(() => {
-    const tokens = TokenBusiness.getAllWithLimit({ limit: 5 });
+    const tokens = TokenBusiness.getAllWithLimit({ limit: 20 });
     setTokenArray(tokens);
   }, []);
 
   const [selectedTokenA, setSelectedTokenA] = useState<SplToken | null>(null);
-  const [accountTokenA, setAccountTokenA] = useState<IAccountDto | null>(null);
-  const [accountTokenB, setAccountTokenB] = useState<IAccountDto | null>(null);
+  const [userAccountTokenA, setUserAccountTokenA] = useState<IAccountDto | null>(null);
+  const [userAccountTokenB, setUserAccountTokenB] = useState<IAccountDto | null>(null);
 
-  const toInputHtml = useRef<HTMLInputElement>(null);
+  const [accountPoolA, setAccountPoolA] = useState<IAccountDto | null>();
+  const [accountPoolB, setAccountPoolB] = useState<IAccountDto | null>();
 
   async function handleSetSelectedToken(newSelected: SplToken | null) {
     if (newSelected === selectedTokenA)
@@ -29,19 +32,33 @@ function TradeScreen() {
 
     try {
       if (newSelected) {
-        const accountPromise = AccountBusiness.getTokenAccountFromOwner(newSelected.address);
+        const userAccountTokenAPromise = AccountBusiness.getTokenAccountFromOwner(newSelected.address);
 
-        const amm = AmmBusiness.findByTokenA(newSelected.address);
+        const swapTokenAmm = AmmBusiness.findByToken(newSelected);
 
-        const stablecoinAccountPromise = AccountBusiness.getTokenAccountFromOwner(amm.token_b_pk);
+        const isStablecoin = newSelected.token_type === TokenTypeEnum.STABLECOIN;
+        const getPoolAccountsPromise = getPoolTokenAccounts(swapTokenAmm, isStablecoin);
 
-        const [accountTokenA, accountTokenB] = await Promise.all([accountPromise, stablecoinAccountPromise])
+        const siblingAmmToken = isStablecoin
+          ? swapTokenAmm.token_a_pk
+          : swapTokenAmm.token_b_pk;
 
-        setAccountTokenA(accountTokenA);
-        setAccountTokenB(accountTokenB);
+        const userAccountTokenBPromise = AccountBusiness.getTokenAccountFromOwner(
+          siblingAmmToken
+        );
+
+        const [accountTokenA, accountTokenB] = await Promise.all([userAccountTokenAPromise, userAccountTokenBPromise])
+        accountTokenA.tokenName = newSelected.name;
+        accountTokenB.tokenName = tokenArray.find(t => t.address === siblingAmmToken)?.name ?? accountTokenB.tokenName;
+
+        setUserAccountTokenA(accountTokenA);
+        setUserAccountTokenB(accountTokenB);
 
         setSwapAmount(BigInt(0));
-        toInputHtml.current!.value = accountTokenB!.balance.toString();
+        setPriceRatio(0);
+        setReceivedAmount(0);
+
+        await getPoolAccountsPromise;
       }
 
       setSelectedTokenA(newSelected);
@@ -51,9 +68,27 @@ function TradeScreen() {
     } finally {
       setLoading(false);
     }
+
+    async function getPoolTokenAccounts(swapTokenAmm: SwapTokenAmm, isStablecoin: boolean) {
+      const accountAPromise = AccountBusiness.getTokenAccount(
+        swapTokenAmm.token_a_pk, swapTokenAmm.token_a_account_pk
+      );
+      const accountBPromise = AccountBusiness.getTokenAccount(
+        swapTokenAmm.token_b_pk, swapTokenAmm.token_b_account_pk
+      );
+
+      if (isStablecoin) {
+        setAccountPoolA(await accountBPromise);
+        setAccountPoolB(await accountAPromise);
+      } else {
+        setAccountPoolA(await accountAPromise);
+        setAccountPoolB(await accountBPromise);
+      }
+    }
   };
 
   const [swapAmount, setSwapAmount] = useState<bigint>(BigInt(0));
+  const [receivedAmount, setReceivedAmount] = useState(0);
   const [priceRatio, setPriceRatio] = useState<number>(0);
 
   useEffect(() => { calculatePrice(swapAmount) }, [swapAmount])
@@ -75,7 +110,7 @@ function TradeScreen() {
 
           <div>
             <label htmlFor="from">
-              {selectedTokenA ? "From: " + selectedTokenA.name : "From"}
+              {selectedTokenA ? "From: " + selectedTokenA.name.split(" - ")[0] : "From"}
             </label>
             <input
               name="from"
@@ -88,7 +123,7 @@ function TradeScreen() {
               <div className="dropdown">
                 <p>
                   <span style={{ paddingRight: .2 + "em" }}>Assets</span>
-                  <svg style={{ paddingBottom: .2 + "em" }}xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width={1 + "em"}>
+                  <svg style={{ paddingBottom: .2 + "em" }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width={1 + "em"}>
                     <path d="M310.6 246.6l-127.1 128C176.4 380.9 168.2 384 160 384s-16.38-3.125-22.63-9.375l-127.1-128C.2244 237.5-2.516 223.7 2.438 211.8S19.07 192 32 192h255.1c12.94 0 24.62 7.781 29.58 19.75S319.8 237.5 310.6 246.6z" />
                   </svg>
                 </p>
@@ -112,9 +147,9 @@ function TradeScreen() {
 
           <div>
             <label htmlFor="to">
-              To {accountTokenB ? ": " + "USDC" : ""}
+              To {userAccountTokenB ? ": " + userAccountTokenB.tokenName.split(" - ")[0] : ""}
             </label>
-            <input ref={toInputHtml} name="to" type="number" disabled defaultValue={0} />
+            <input name="to" type="number" disabled value={receivedAmount.toFixed(2)} />
           </div>
 
           <div className="confirm-btn-div">
@@ -126,18 +161,17 @@ function TradeScreen() {
   );
 
   function calculatePrice(swapAmount: bigint) {
-    if (accountTokenA && accountTokenB && swapAmount > 0) {
-      const balanceTokenAccountB = accountTokenB.balance + swapAmount;
-      const balanceTokenAccountA = accountTokenA.balance;
+    if (accountPoolA && accountPoolB && swapAmount > 0) {
+      const product = accountPoolA.balance * accountPoolB.balance;
 
-      const newBalanceTokenAccountB = balanceTokenAccountB + swapAmount;
+      const newAmountPoolB = accountPoolB.balance + swapAmount;
+      const amountPoolA = Number(accountPoolA.balance);
 
-      const product = Number(balanceTokenAccountA * balanceTokenAccountB);
+      const newAmountPoolA = Number(product) / Number(newAmountPoolB);
+      const received = amountPoolA-newAmountPoolA;
 
-      const newAmountTokenA = Number(balanceTokenAccountA) - (product / Number(newBalanceTokenAccountB));
-      const price = Number(swapAmount) / newAmountTokenA;
-
-      setPriceRatio(price);
+      setReceivedAmount(received);
+      setPriceRatio(received/Number(swapAmount));
     }
   }
 
@@ -156,7 +190,7 @@ function TradeScreen() {
       setLoading(true);
 
       try {
-        await AmmBusiness.swap(selectedTokenA.address, swapAmount);
+        await AmmBusiness.swap(selectedTokenA, swapAmount);
         alert("Sucesso")
       } catch (error) {
         console.error(error);

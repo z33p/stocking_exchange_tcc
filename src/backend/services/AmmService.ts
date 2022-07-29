@@ -175,8 +175,8 @@ async function createMintAndAccount(
   return { mint, mintAccount };
 }
 
-async function loadFirstTokenSwapByTokenA(token_a_pk: string) {
-  const swapTokenAmm = SwapTokenAmmData.findByTokenA(token_a_pk);
+async function loadTokenSwapByToken(splTokenA: SplToken) {
+  const swapTokenAmm = SwapTokenAmmData.findByToken(splTokenA);
 
   const conn = await SolanaService.establishConnection();
   const owner = await SolanaService.getPayer();
@@ -191,8 +191,8 @@ async function loadFirstTokenSwapByTokenA(token_a_pk: string) {
   return fetchedTokenSwap;
 }
 
-async function swap(token_a_pk: string, swapAmount: bigint) {
-  const tokenSwap = await loadFirstTokenSwapByTokenA(token_a_pk);
+async function swap(splTokenA: SplToken, swapAmount: bigint) {
+  const tokenSwap = await loadTokenSwapByToken(splTokenA);
 
   const conn = await SolanaService.establishConnection();
   const owner = await SolanaService.getPayer();
@@ -200,7 +200,7 @@ async function swap(token_a_pk: string, swapAmount: bigint) {
   const tokenA = new Token(conn, tokenSwap.mintA, TOKEN_PROGRAM_ID, owner);
   const tokenB = new Token(conn, tokenSwap.mintB, TOKEN_PROGRAM_ID, owner);
 
-  console.log("Users account creating...");
+  console.log("Users account getting...");
   const [accountUserA, accountUserB] = await Promise.all([
     tokenA.getOrCreateAssociatedAccountInfo(owner.publicKey),
     tokenB.getOrCreateAssociatedAccountInfo(owner.publicKey)
@@ -210,9 +210,6 @@ async function swap(token_a_pk: string, swapAmount: bigint) {
 
   console.log("Fee account creating...");
   const feeAccountPoolSwap = await mintPool.createAccount(owner.publicKey)
-
-  // console.log("Minting to accountUserA...");
-  // await tokenA.mintTo(accountUserA, owner, [], swapAmount);
 
   console.log("Creating throwaway account");
   const userTransferAuthority = new Account();
@@ -238,23 +235,36 @@ async function swap(token_a_pk: string, swapAmount: bigint) {
   ]);
 
   console.log('Swapping');
-  await tokenSwap.swap(
-    accountUserA.address,
-    accountTokenA.address,
-    accountTokenB.address,
-    accountUserB.address,
-    feeAccountPoolSwap,
-    userTransferAuthority,
-    Number(swapAmount),
-    1,
-    confirmOptions
-  );
+  if (splTokenA.token_type === TokenTypeEnum.COIN)
+    await tokenSwap.swap(
+      accountUserA.address,
+      accountTokenA.address,
+      accountTokenB.address,
+      accountUserB.address,
+      feeAccountPoolSwap,
+      userTransferAuthority,
+      Number(swapAmount),
+      1,
+      confirmOptions
+    );
+  else
+    await tokenSwap.swap(
+      accountTokenB.address,
+      accountUserB.address,
+      accountUserA.address,
+      accountTokenA.address,
+      feeAccountPoolSwap,
+      userTransferAuthority,
+      Number(swapAmount),
+      1,
+      confirmOptions
+    );
   console.log('Swapped');
 }
 
 const AmmService = {
   createMintAmm,
-  loadFirstTokenSwapByTokenA,
+  loadFirstTokenSwapByTokenA: loadTokenSwapByToken,
   swap
 };
 

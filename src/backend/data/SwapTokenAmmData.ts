@@ -1,10 +1,16 @@
+import SplToken from "../../domain/entities/SplToken";
 import SwapTokenAmm from "../../domain/entities/SwapTokenAmm";
+import TokenTypeEnum from "../../domain/enums/TokenTypeEnum";
 import { database } from "./DataConnection";
 
-function getFirst(token_a_pk: string) {
+function findByToken(token: SplToken) {
+  const tokenPkColumn = token.token_type === TokenTypeEnum.COIN
+    ? "token_a_pk"
+    : "token_b_pk";
+
     const stmt = database
         .prepare("SELECT * FROM tb_swap_token_amm tsta " +
-            `WHERE token_a_pk = '${token_a_pk}' ORDER BY 1 LIMIT 1`);
+            `WHERE ${tokenPkColumn} = '${token.address}' ORDER BY 1 LIMIT 1`);
 
     return stmt.get() as SwapTokenAmm;
 }
@@ -44,7 +50,7 @@ function insert(swapTokenAmm: SwapTokenAmm) {
 }
 
 const SwapTokenAmmData = {
-    findByTokenA: getFirst,
+    findByToken,
     getAllWithLimit,
     getAllPaginated,
     insert
