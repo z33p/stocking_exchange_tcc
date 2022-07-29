@@ -12,3 +12,7 @@
     background-color: white;    
 }
 
+#wallet-screen svg {
+    width: 2.5em;
+}
+
