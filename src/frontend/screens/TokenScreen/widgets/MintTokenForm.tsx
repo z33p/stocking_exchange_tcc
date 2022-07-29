@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
+import { MainScreenContext } from "../../MainScreen/MainScreenContextProvider";
 import ITokenDto from "../Dto/ITokenDto";
 import IEditableTokenForm from "../Dto/ITokenEditableForm";
 import { TokenScreenContext } from "../TokenScreenContextProvider";
@@ -9,11 +10,13 @@ import TokenForm from "./TokenForm";
 const { TokenBusiness } = window.Domain;
 
 export default function MintTokenForm() {
+  const { setLoading } = useContext(MainScreenContext);
+
   const {
     tokenArray,
     selectedTokenIndex,
     handleSetSelectedTokenIndex,
-    setTokenArray
+    setTokenArray,
   } = useContext(TokenScreenContext);
 
   let tokenForm;
@@ -44,11 +47,26 @@ export default function MintTokenForm() {
 
     return <TokenForm
       textSubmitBtn="Mint"
-      onSubmitBtn={(token) => {
-        console.log(token);
-        TokenBusiness.mintToken(token);
+      onSubmitBtn={async (token) => {
+        setLoading(true);
+
         setTokenArray([...tokenArray, token]);
-        handleSetSelectedTokenIndex(tokenArray.length)
+        handleSetSelectedTokenIndex(tokenArray.length);
+
+        try {
+          await TokenBusiness.mintToken(token);
+
+          // TODO: use set state here instead of outside try catch
+          // setTokenArray([...tokenArray, token]);
+          // handleSetSelectedTokenIndex(tokenArray.length);
+
+          alert("Sucesso");
+        } catch (error) {
+          console.error(error);
+          alert("Error")
+        } finally {
+          setLoading(false);
+        }
       }}
       editableTokenState={editableTokenForm}
       isBlockchainFieldsDisabled={false}

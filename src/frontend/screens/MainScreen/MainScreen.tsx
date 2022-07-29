@@ -1,5 +1,6 @@
 import "./MainScreen.css";
 import { VerticalNavBar } from "../widgets/VerticalNavBar";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import TokenScreen from "../TokenScreen/TokenScreen";
 import WalletScreen from "../WalletScreen/WalletScreen";
 import MainScreenContextProvider, { IMainScreenContext, MyAppScreens } from "./MainScreenContextProvider";
@@ -8,6 +9,7 @@ import { useState } from "react";
 
 export default function MainScreen() {
   const [selectedScreen, setSelectedScreen] = useState<MyAppScreens | null>(MyAppScreens.LIST_TOKENS);
+  const [loading, setLoading] = useState(false);
 
   function handleSetSelectedScreen(newSelectedScreen: MyAppScreens | null) {
     if (selectedScreen === newSelectedScreen)
@@ -18,17 +20,23 @@ export default function MainScreen() {
 
   const initialContext: IMainScreenContext = {
     selectedScreen,
-    handleSetSelectedScreen
+    handleSetSelectedScreen,
+
+    loading,
+    setLoading
   }
 
   const screen = selectedScreen !== null ? screens[selectedScreen] : null;
 
   return (
     <MainScreenContextProvider initialContext={initialContext}>
-      <div id="main-screen">
-        <VerticalNavBar />
-        {screen}
-      </div>
+      <>
+        <LoadingScreen visible={loading} />
+        <div id="main-screen">
+          <VerticalNavBar />
+          {screen}
+        </div>
+      </>
     </MainScreenContextProvider>
   )
 }

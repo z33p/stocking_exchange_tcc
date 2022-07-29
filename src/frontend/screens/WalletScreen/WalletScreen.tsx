@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import IAccountDto from "../../../domain/business/Dto/IAccountDto";
+import { MainScreenContext } from "../MainScreen/MainScreenContextProvider";
 import "./WalletScreen.css";
 
 const { AccountBusiness } = window.Domain;
@@ -15,10 +16,20 @@ const colSpan = {
 export default function WalletScreen() {
   const [accountsArray, setAccountsArray] = useState<IAccountDto[]>([]);
 
+  const { setLoading } = useContext(MainScreenContext);
+
   useEffect(() => {
+    setLoading(true);
+
     AccountBusiness
       .getAllWithLimit({ limit: 10 })
-      .then((accounts) => setAccountsArray(accounts));
+      .then((accounts) => setAccountsArray(accounts))
+      .catch((error) => {
+        console.error(error);
+        alert("Error");
+      }).finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (

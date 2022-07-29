@@ -18,6 +18,9 @@ export const MainScreenContext = createContext<IMainScreenContext>({} as IMainSc
 export interface IMainScreenContext {
   selectedScreen: MyAppScreens | null;
   handleSetSelectedScreen: (newSelectedScreen: MyAppScreens | null) => void;
+
+  loading: boolean,
+  setLoading: (isLoading: boolean) => void
 }
 
 export enum MyAppScreens {

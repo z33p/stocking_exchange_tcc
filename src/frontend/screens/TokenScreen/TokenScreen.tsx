@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { MainScreenContext } from "../MainScreen/MainScreenContextProvider";
 import ITokenDto from "./Dto/ITokenDto";
 import "./TokenScreen.css";
 import TokenScreenContextProvider from "./TokenScreenContextProvider";
@@ -29,9 +30,19 @@ export default function TokenScreen() {
 
   const [tokenArray, setTokenArray] = useState<ITokenDto[]>([]);
 
+  const { setLoading } = useContext(MainScreenContext);
+
   useEffect(() => {
-    const tokens = TokenBusiness.getAllWithLimit({ limit: 10 });
-    setTokenArray(tokens);
+    setLoading(true);
+    try {
+      const tokens = TokenBusiness.getAllWithLimit({ limit: 10 });
+      setTokenArray(tokens);
+    } catch (error) {
+      console.error(error);
+      alert("Error");
+    } finally {
+      setLoading(false);
+    }
   }, [])
 
   const initialContext: ITokenScreenContext = {

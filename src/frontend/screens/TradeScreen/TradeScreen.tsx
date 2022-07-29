@@ -1,11 +1,13 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import IAccountDto from "../../../domain/business/Dto/IAccountDto";
 import SplToken from "../../../domain/entities/SplToken";
+import { MainScreenContext } from "../MainScreen/MainScreenContextProvider";
 import "./TradeScreen.css";
 
 const { TokenBusiness, AccountBusiness, AmmBusiness } = window.Domain;
 
 function TradeScreen() {
+  const { setLoading } = useContext(MainScreenContext);
   const [tokenArray, setTokenArray] = useState<SplToken[]>([]);
 
   useEffect(() => {
@@ -20,29 +22,35 @@ function TradeScreen() {
   const toInputHtml = useRef<HTMLInputElement>(null);
 
   async function handleSetSelectedToken(newSelected: SplToken | null) {
-    console.log(newSelected);
-    console.log(selectedTokenA);
-
     if (newSelected === selectedTokenA)
       return;
 
-    if (newSelected) {
-      const accountPromise = AccountBusiness.getTokenAccountFromOwner(newSelected.address);
+    setLoading(true);
 
-      const amm = AmmBusiness.findByTokenA(newSelected.address);
+    try {
+      if (newSelected) {
+        const accountPromise = AccountBusiness.getTokenAccountFromOwner(newSelected.address);
 
-      const stablecoinAccountPromise = AccountBusiness.getTokenAccountFromOwner(amm.token_b_pk);
+        const amm = AmmBusiness.findByTokenA(newSelected.address);
 
-      const [accountTokenA, accountTokenB] = await Promise.all([accountPromise, stablecoinAccountPromise])
+        const stablecoinAccountPromise = AccountBusiness.getTokenAccountFromOwner(amm.token_b_pk);
 
-      setAccountTokenA(accountTokenA);
-      setAccountTokenB(accountTokenB);
+        const [accountTokenA, accountTokenB] = await Promise.all([accountPromise, stablecoinAccountPromise])
 
-      setSwapAmount(BigInt(0));
-      toInputHtml.current!.value = accountTokenB!.balance.toString();
+        setAccountTokenA(accountTokenA);
+        setAccountTokenB(accountTokenB);
+
+        setSwapAmount(BigInt(0));
+        toInputHtml.current!.value = accountTokenB!.balance.toString();
+      }
+
+      setSelectedTokenA(newSelected);
+    } catch (error) {
+      console.error(error);
+      alert("Error")
+    } finally {
+      setLoading(false);
     }
-
-    setSelectedTokenA(newSelected);
   };
 
   const [swapAmount, setSwapAmount] = useState<bigint>(BigInt(0));
@@ -138,11 +146,22 @@ function TradeScreen() {
     setSwapAmount(account!.balance);
   }
 
-  function confirmBtn() {
-    if (selectedTokenA) {
-      AmmBusiness.swap(selectedTokenA.address, swapAmount);
+  async function confirmBtn() {
+    if (selectedTokenA && swapAmount > 0) {
+      setLoading(true);
+
+      try {
+        await AmmBusiness.swap(selectedTokenA.address, swapAmount);
+        alert("Sucesso")
+      } catch (error) {
+        console.error(error);
+        alert("Error");
+      } finally {
+        setLoading(false);
+      }
+
     } else {
-      alert("Selecione um token");
+      alert("Selecione um token ou insira uma quantidade");
     }
   }
 }
