@@ -24,6 +24,7 @@ export interface IMainScreenContext {
 }
 
 export enum MyAppScreens {
+  HOME,
   LIST_TOKENS,
   WALLET,
   TRADE,

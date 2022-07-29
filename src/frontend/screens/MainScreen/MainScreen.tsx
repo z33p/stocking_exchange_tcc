@@ -1,6 +1,7 @@
 import "./MainScreen.css";
 import { VerticalNavBar } from "../widgets/VerticalNavBar";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import HomeScreen from "../HomeScreen/HomeScreen";
 import TokenScreen from "../TokenScreen/TokenScreen";
 import WalletScreen from "../WalletScreen/WalletScreen";
 import MainScreenContextProvider, { IMainScreenContext, MyAppScreens } from "./MainScreenContextProvider";
@@ -8,7 +9,7 @@ import TradeScreen from "../TradeScreen/TradeScreen";
 import { useState } from "react";
 
 export default function MainScreen() {
-  const [selectedScreen, setSelectedScreen] = useState<MyAppScreens | null>(MyAppScreens.LIST_TOKENS);
+  const [selectedScreen, setSelectedScreen] = useState<MyAppScreens | null>(MyAppScreens.HOME);
   const [loading, setLoading] = useState(false);
 
   function handleSetSelectedScreen(newSelectedScreen: MyAppScreens | null) {
@@ -42,6 +43,7 @@ export default function MainScreen() {
 }
 
 const screens = [
+  <HomeScreen />,
   <TokenScreen />,
   <WalletScreen />,
   <TradeScreen />,
