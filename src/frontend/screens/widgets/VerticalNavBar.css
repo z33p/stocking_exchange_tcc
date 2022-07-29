@@ -7,8 +7,20 @@
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
 }
 
-#vertical-navbar ul {
-    background-color: aqua;
+#vertical-navbar li:hover {
+    font-weight: bold;
+}
+
+#vertical-navbar svg {
+    width: 4em;
+}
+
+#vertical-navbar li:hover svg {
+    width: 4.5em;
+}
+
+#vertical-navbar span {
+    font-size: large;
 }
 
 li {
